@@ -1,17 +1,3 @@
-/* Crear los siguientes modelos. Todos deben usar timestamps: true y versionKey: false.
-1. User (Usuario)
-● username (String, único, 3-20 caracteres)
-● email (String, único, formato válido)
-● password (String, hasheada con bcrypt)
-● role (String, enum: 'user', 'admin', default: 'user')
-● profile (documento embebido, relación 1:1):
-○ firstName (String, 2-50 caracteres)
-○ lastName (String, 2-50 caracteres)
-○ birthDate (Date, opcional)
-○ phone (String, opcional)
-● deletedAt (Date, default: null)
-● Virtual populate events → eventos organizados por el usuario. */
-
 import { model, Schema, Types } from "mongoose";
 import bcrypt from "bcrypt";
 
@@ -28,7 +14,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      matchMedia: [/^\S+@\S+\.\S+$/, "Email inválido"],
+      match: [/^\S+@\S+\.\S+$/, "Email inválido"],
     },
     password: {
       type: String,
@@ -69,6 +55,8 @@ const userSchema = new Schema(
   {
     timestamps: true,
     versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   },
 );
 
