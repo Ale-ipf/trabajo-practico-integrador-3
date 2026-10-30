@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 export const generateToken = (payload) => {
   try {
     return jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES
+      expiresIn:
+        process.env.JWT_EXPIRES_IN || process.env.JWT_EXPIRES || "1d",
     });
   } catch (error) {
     throw new Error("Error generando el token: " + error.message);

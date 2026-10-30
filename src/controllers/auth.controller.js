@@ -67,7 +67,7 @@ export const login = async (req, res) => {
       });
     }
 
-    const token = generateToken(user._id);
+    const token = generateToken({ userId: user._id.toString() });
     const userData = user.toObject();
     delete userData.password;
 
