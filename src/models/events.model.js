@@ -17,15 +17,32 @@ const eventSchema = new Schema(
     startDate: {
       type: Date,
       required: true,
+      validate: {
+        validator: function (date) {
+          return !this.endDate || date < this.endDate;
+        },
+        message:
+          "La fecha de inicio debe ser anterior a la fecha de finalización",
+      },
     },
     endDate: {
       type: Date,
       required: true,
+      validate: {
+        validator: function (date) {
+          return !this.startDate || date > this.startDate;
+        },
+        message: "La fecha de finalización debe ser posterior al inicio",
+      },
     },
     capacity: {
       type: Number,
       required: true,
       min: 1,
+      validate: {
+        validator: Number.isInteger,
+        message: "La capacidad debe ser un número entero",
+      },
     },
     price: {
       type: Number,
@@ -40,16 +57,19 @@ const eventSchema = new Schema(
     location: {
       venue: {
         type: String,
+        required: true,
         minlength: 3,
         maxlength: 100,
       },
       address: {
         type: String,
+        required: true,
         minlength: 5,
         maxlength: 150,
       },
       city: {
         type: String,
+        required: true,
         minlength: 2,
         maxlength: 50,
       },
@@ -67,6 +87,8 @@ const eventSchema = new Schema(
     ],
   },
   {
+    timestamps: true,
+    versionKey: false,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   },
