@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 const namePattern = /^[\p{L}]+(?:[ '-][\p{L}]+)*$/u;
 
@@ -94,3 +94,33 @@ export const loginValidation = [
 ];
 
 export const updateProfileValidation = profileValidation(true);
+
+export const userIdValidation = [
+  param("id").isMongoId().withMessage("ID de usuario inválido"),
+];
+
+export const updateUserValidation = [
+  ...userIdValidation,
+  body("username")
+    .optional()
+    .isString()
+    .withMessage("El nombre de usuario debe ser texto")
+    .bail()
+    .trim()
+    .isAlphanumeric()
+    .withMessage("El nombre de usuario solo puede contener letras y números")
+    .bail()
+    .isLength({ min: 3, max: 20 })
+    .withMessage("El nombre de usuario debe tener entre 3 y 20 caracteres"),
+  body("email")
+    .optional()
+    .isEmail()
+    .withMessage("El email debe ser válido")
+    .bail()
+    .normalizeEmail(),
+  body("role")
+    .optional()
+    .isIn(["user", "admin"])
+    .withMessage("El rol debe ser user o admin"),
+  ...profileValidation(true),
+];

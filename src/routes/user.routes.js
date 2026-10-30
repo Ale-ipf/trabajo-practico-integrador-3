@@ -5,17 +5,24 @@ import {
   getUserById,
   updateUser,
 } from "../controllers/user.controller.js";
+import {
+  adminMiddleware,
+  authMiddleware,
+} from "../middlewares/auth.middleware.js";
+import { validate } from "../middlewares/validate.js";
+import {
+  updateUserValidation,
+  userIdValidation,
+} from "../middlewares/validations/user.validation.js";
 
 export const userRouter = Router();
 
-// Ruta para traer todos los usuarios
+userRouter.use("/users", authMiddleware, adminMiddleware);
+
 userRouter.get("/users", getAllUsers);
 
-// Ruta para traer un usuario por id
-userRouter.get("/users/:id", getUserById);
+userRouter.get("/users/:id", userIdValidation, validate, getUserById);
 
-// Ruta para actualizar un usuario
-userRouter.put("/users/:id", updateUser);
+userRouter.put("/users/:id", updateUserValidation, validate, updateUser);
 
-// Ruta para eliminar un usuario
-userRouter.delete("/users/:id", deleteUser);
+userRouter.delete("/users/:id", userIdValidation, validate, deleteUser);
