@@ -1,5 +1,4 @@
-import { model, Schema, Types } from "mongoose";
-import bcrypt from "bcrypt";
+import { model, Schema } from "mongoose";
 
 const userSchema = new Schema(
   {
@@ -47,6 +46,12 @@ const userSchema = new Schema(
         default: null,
       },
     },
+    attendedEvents: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Event",
+      },
+    ],
     deletedAt: {
       type: Date,
       default: null,
@@ -59,5 +64,11 @@ const userSchema = new Schema(
     toObject: { virtuals: true },
   },
 );
+
+userSchema.virtual("events", {
+  ref: "Event",
+  localField: "_id",
+  foreignField: "organizer",
+});
 
 export const User = model("User", userSchema);
